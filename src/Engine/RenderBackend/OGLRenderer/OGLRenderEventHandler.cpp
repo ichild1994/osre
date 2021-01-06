@@ -35,7 +35,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <osre/Platform/AbstractWindow.h>
 #include <osre/Platform/PlatformInterface.h>
 #include <osre/Profiling/PerformanceCounterRegistry.h>
-#include <osre/RenderBackend/HWBufferManager.h>
+#include <osre/RenderBackend/THWBufferManager.h>
 #include <osre/RenderBackend/Mesh.h>
 #include <osre/RenderBackend/RenderCommon.h>
 #include <osre/RenderBackend/Shader.h>
@@ -58,13 +58,13 @@ OGLRenderEventHandler::OGLRenderEventHandler() :
         m_renderCmdBuffer(nullptr),
         m_renderCtx(nullptr),
         m_vertexArray(nullptr),
-        m_hwBufferManager(nullptr) {
+        mHwBufferManager(nullptr) {
     // empty
 }
 
 OGLRenderEventHandler::~OGLRenderEventHandler() {
-    delete m_hwBufferManager;
-    m_hwBufferManager = nullptr;
+    delete mHwBufferManager;
+    mHwBufferManager = nullptr;
 }
 
 bool OGLRenderEventHandler::onEvent(const Event &ev, const EventData *data) {
@@ -121,7 +121,7 @@ bool OGLRenderEventHandler::onAttached(const EventData *) {
 
     m_oglBackend = new OGLRenderBackend;
     m_oglBackend->setTimer(PlatformInterface::getInstance()->getTimer());
-    m_hwBufferManager = new HWBufferManager;
+    mHwBufferManager = new HWBufferManager<OGLBuffer>;
 
     return true;
 }
