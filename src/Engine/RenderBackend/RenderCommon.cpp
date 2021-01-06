@@ -637,8 +637,8 @@ MeshEntry *RenderBatchData::getMeshEntryByName(const c8 *name) {
     }
 
     for (ui32 i = 0; i < m_meshArray.size(); ++i) {
-        for (ui32 j = 0; j < m_meshArray[i]->m_geo.size(); ++j) {
-            if (m_meshArray[i]->m_geo[j]->m_name == name) {
+        for (ui32 j = 0; j < m_meshArray[i]->mMeshArray.size(); ++j) {
+            if (m_meshArray[i]->mMeshArray[j]->m_name == name) {
                 return m_meshArray[i];
             }
         }

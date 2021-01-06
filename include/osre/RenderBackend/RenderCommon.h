@@ -495,7 +495,7 @@ struct OSRE_EXPORT Material {
     UniformVar *m_parameters;
     Color4 m_color[MaxMatColorType];
     f32 mShineness;
-    f32 mShinenessStrength; 
+    f32 mShinenessStrength;
     IO::Uri m_uri;
 
     Material(const String &name);
@@ -715,7 +715,7 @@ struct MatrixBuffer {
 struct MeshEntry {
     ui32 numInstances;
     bool m_isDirty;
-    CPPCore::TArray<Mesh *> m_geo;
+    CPPCore::TArray<Mesh *> mMeshArray;
 };
 
 struct RenderBatchData {
@@ -797,9 +797,10 @@ private:
 struct FrameSubmitCmd {
     enum Type {
         CreatePasses = 1,
-        UpdateBuffer = 2,
-        UpdateMatrixes = 4,
-        UpdateUniforms = 8
+        AddMeshes = 2,
+        UpdateBuffer = 4,
+        UpdateMatrixes = 8,
+        UpdateUniforms = 16
     };
 
     ui32 m_meshId;
@@ -810,7 +811,12 @@ struct FrameSubmitCmd {
     c8 *m_data;
 
     FrameSubmitCmd() :
-            m_meshId(999999), m_passId(nullptr), m_batchId(nullptr), m_updateFlags(0), m_size(0), m_data(nullptr) {
+            m_meshId(999999),
+            m_passId(nullptr),
+            m_batchId(nullptr),
+            m_updateFlags(0),
+            m_size(0),
+            m_data(nullptr) {
         // empty
     }
 };

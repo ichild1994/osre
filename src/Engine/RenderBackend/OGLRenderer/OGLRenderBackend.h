@@ -74,8 +74,6 @@ struct PrimitiveGroup;
 //-------------------------------------------------------------------------------------------------
 class OGLRenderBackend {
 public:
-	TransformMatrixBlock m_mvp;
-
 	using VertAttribArray = CPPCore::TArray<OGLVertexAttribute *>;
 
 	/// The default class constructor.
@@ -152,7 +150,8 @@ public:
     const String &getExtensions() const;
     
 private:
-	Platform::AbstractOGLRenderContext *m_renderCtx;
+    TransformMatrixBlock m_mvp;
+    Platform::AbstractOGLRenderContext *m_renderCtx;
 	CPPCore::TArray<OGLBuffer*> m_buffers;
 	GLuint m_activeVB;
 	GLuint m_activeIB;

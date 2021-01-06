@@ -57,8 +57,8 @@ public:
         rbSrv->sendEvent(&OnAttachViewEvent, nullptr);
 
         Scene::MeshBuilder myBuilder;
-        myBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
-        Mesh *mesh1 = myBuilder.getMesh();
+        Mesh *mesh1 = myBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly)
+            .getMesh();
         mesh1->m_localMatrix = true;
         TransformState transform;
         transform.setTranslation(0.5f, 0, 0);

@@ -50,6 +50,7 @@ static const String Tag = "OGLRenderBackend";
 static const ui32 NotInitedHandle = 9999999;
 
 OGLRenderBackend::OGLRenderBackend() :
+        m_mvp(),
         m_renderCtx(nullptr),
         m_buffers(),
         m_activeVB(NotInitedHandle),
@@ -609,7 +610,7 @@ OGLShader *OGLRenderBackend::getShader(const String &name) {
         return nullptr;
     }
 
-    OGLShader *shader(nullptr);
+    OGLShader *shader = nullptr;
     for (ui32 i = 0; i < m_shaders.size(); ++i) {
         if (m_shaders[i]->getName() == name) {
             shader = m_shaders[i];

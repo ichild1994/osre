@@ -263,6 +263,44 @@ bool OGLRenderEventHandler::onRenderFrame(const EventData *eventData) {
     return true;
 }
 
+OGLVertexArray *addMesh(OGLRenderBackend *oglRB, MeshEntry *currentMeshEntry, size_t meshIdx, /*CPPCore::TArray<size_t> &primGroups, */
+        OGLRenderEventHandler *parent, RenderBatchData *currentBatchData) {
+    CPPCore::TArray<size_t> primGroups;
+    OGLVertexArray *va = nullptr;
+    Mesh *currentMesh = currentMeshEntry->mMeshArray[meshIdx];
+    OSRE_ASSERT(nullptr != currentMesh);
+
+    // register primitive groups to render
+    for (size_t i = 0; i < currentMesh->m_numPrimGroups; ++i) {
+        const size_t primIdx(oglRB->addPrimitiveGroup(&currentMesh->m_primGroups[i]));
+        primGroups.add(primIdx);
+    }
+
+    // create the default material
+    SetMaterialStageCmdData *data = setupMaterial(currentMesh->m_material, oglRB, parent);
+    OGLShader *activeShader = data->m_shader;
+    // setup vertex array, vertex and index buffers
+    va = setupBuffers(currentMesh, oglRB, activeShader);
+    if (nullptr == va) {
+        osre_debug(Tag, "Vertex-Array-pointer is a nullptr.");
+        return nullptr;
+    }
+    data->m_vertexArray = va;
+
+    // setup the draw calls
+    if (0 == currentMeshEntry->numInstances) {
+        setupPrimDrawCmd(currentBatchData->m_id, currentMesh->m_localMatrix, currentMesh->m_model,
+                primGroups, oglRB, parent, va);
+    } else {
+        setupInstancedDrawCmd(currentBatchData->m_id, primGroups, oglRB, parent, va,
+                currentMeshEntry->numInstances);
+    }
+
+    primGroups.resize(0);
+
+    return va;
+}
+    
 bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventData) {
     OSRE_ASSERT(nullptr != m_oglBackend);
 
@@ -291,8 +329,8 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
             getRenderCmdBuffer()->setMatrixes(matrixBuffer.m_model, matrixBuffer.m_view, matrixBuffer.m_proj);
 
             // set uniforms
-            for (ui32 uniformIdx = 0; uniformIdx < currentBatchData->m_uniforms.size(); ++uniformIdx) {
-                setupParameter(currentBatchData->m_uniforms[uniformIdx], m_oglBackend, this);
+            for (auto & uniform : currentBatchData->m_uniforms) {
+                setupParameter(uniform, m_oglBackend, this);
             }
 
             // set meshes
@@ -307,37 +345,8 @@ bool OGLRenderEventHandler::onInitRenderPasses(const Common::EventData *eventDat
                     continue;
                 }
 
-                for (ui32 meshIdx = 0; meshIdx < currentMeshEntry->m_geo.size(); ++meshIdx) {
-                    Mesh *currentMesh = currentMeshEntry->m_geo[meshIdx];
-                    OSRE_ASSERT(nullptr != currentMesh);
-
-                    // register primitive groups to render
-                    for (size_t i = 0; i < currentMesh->m_numPrimGroups; ++i) {
-                        const size_t primIdx(m_oglBackend->addPrimitiveGroup(&currentMesh->m_primGroups[i]));
-                        primGroups.add(primIdx);
-                    }
-
-                    // create the default material
-                    SetMaterialStageCmdData *data = setupMaterial(currentMesh->m_material, m_oglBackend, this);
-
-                    // setup vertex array, vertex and index buffers
-                    m_vertexArray = setupBuffers(currentMesh, m_oglBackend, m_renderCmdBuffer->getActiveShader());
-                    if (nullptr == m_vertexArray) {
-                        osre_debug(Tag, "Vertex-Array-pointer is a nullptr.");
-                        return false;
-                    }
-                    data->m_vertexArray = m_vertexArray;
-
-                    // setup the draw calls
-                    if (0 == currentMeshEntry->numInstances) {
-                        setupPrimDrawCmd(currentBatchData->m_id, currentMesh->m_localMatrix, currentMesh->m_model,
-                                primGroups, m_oglBackend, this, m_vertexArray);
-                    } else {
-                        setupInstancedDrawCmd(currentBatchData->m_id, primGroups, m_oglBackend, this, m_vertexArray,
-                                currentMeshEntry->numInstances);
-                    }
-
-                    primGroups.resize(0);
+                for (ui32 meshIdx = 0; meshIdx < currentMeshEntry->mMeshArray.size(); ++meshIdx) {
+                    addMesh(m_oglBackend, currentMeshEntry, meshIdx, /*primGroups,*/ this, currentBatchData);
                 }
                 currentMeshEntry->m_isDirty = false;
             }
@@ -378,6 +387,21 @@ bool OGLRenderEventHandler::onCommitNexFrame(const Common::EventData *eventData)
             m_oglBackend->bindBuffer(buffer);
             m_oglBackend->copyDataToBuffer(buffer, cmd->m_data, cmd->m_size, BufferAccessType::ReadWrite);
             m_oglBackend->unbindBuffer(buffer);
+        } else if (cmd->m_updateFlags & (ui32)FrameSubmitCmd::AddMeshes) {
+            CPPCore::TArray<size_t> primGroups;
+            for (auto &newPasse : data->m_frame->m_newPasses) {
+                for (auto & geoBatch : newPasse->m_geoBatches) {
+                    for (ui32 k = 0; k < geoBatch->m_meshArray.size(); ++k) {
+                        MeshEntry *currentMeshEntry = geoBatch->m_meshArray[k];
+                        if (!currentMeshEntry->m_isDirty) {
+                            continue;
+                        }
+                        
+                        addMesh(m_oglBackend, currentMeshEntry, k, /*primGroups,*/ this, geoBatch);
+                        currentMeshEntry->m_isDirty = false;
+                    }
+                }
+            }
         }
         cmd->m_updateFlags = 0;
     }
