@@ -69,7 +69,7 @@ ApplicationContext::~ApplicationContext() {
     mSettings = nullptr;
 }
 
-static const String PlatformPluginName[static_cast<i32>(PluginType::MaxPlugin)] = {
+static const String PlatformPluginName[static_cast<i64>(PluginType::MaxPlugin)] = {
 #ifdef OSRE_WINDOWS
     "WindowsPlugin"
 #else
@@ -158,11 +158,11 @@ String PlatformInterface::getOSPluginName(PluginType type) {
     switch (type) {
 #ifdef OSRE_WINDOWS
         case PluginType::WindowsPlugin:
-            name = PlatformPluginName[static_cast<i32>(PluginType::WindowsPlugin)];
+            name = PlatformPluginName[static_cast<i64>(PluginType::WindowsPlugin)];
             break;
 #else
         case PluginType::SDL2Plugin:
-            name = PlatformPluginName[static_cast<i32>(PluginType::SDL2Plugin)];
+            name = PlatformPluginName[static_cast<i64>(PluginType::SDL2Plugin)];
             break;
 #endif // OSRE_WINDOWS
         default:

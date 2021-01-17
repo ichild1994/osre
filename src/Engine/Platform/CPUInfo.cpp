@@ -31,7 +31,7 @@ namespace OSRE {
 namespace Platform {
 
 bool CPUInfo::m_IsInited  = false;
-i32  CPUInfo::m_CPUFlags  = CPUID_None;
+i64  CPUInfo::m_CPUFlags  = CPUID_None;
 ui32 CPUInfo::m_NumCPUs   = 0;
 
 //-------------------------------------------------------------------------------------------------
@@ -203,7 +203,7 @@ ui32 CPUInfo::getNumCPUs() const {
     return m_NumCPUs;
 }
 
-i32 CPUInfo::getCPUProperties() const {
+i64 CPUInfo::getCPUProperties() const {
     return m_CPUFlags;
 }
 

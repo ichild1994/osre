@@ -36,7 +36,7 @@ class RenderCommonTest : public ::testing::Test {
 };
 
 TEST_F( RenderCommonTest, createVertComponentTest ) {
-    bool ok( true );
+    bool ok = true;
     try {
         VertComponent comp1;
         VertComponent comp2( VertexAttribute::Position, VertexFormat::Float3 );
@@ -51,7 +51,7 @@ TEST_F( RenderCommonTest, createVertComponentTest ) {
 }
 
 TEST_F( RenderCommonTest, createVertexLayoutTest ) {
-    bool ok( true );
+    bool ok = true;
     try {
         VertexLayout layout;
     } catch( ... ) {
@@ -125,7 +125,7 @@ TEST_F(RenderCommonTest, viewportTest) {
 }
 
 TEST_F( RenderCommonTest, allocBufferDataTest ) {
-    BufferData *data( BufferData::alloc( BufferType::VertexBuffer, 100, BufferAccessType::ReadWrite ) );
+    BufferData *data = BufferData::alloc( BufferType::VertexBuffer, 100, BufferAccessType::ReadWrite );
     EXPECT_NE( data, nullptr );
     EXPECT_EQ( data->m_access, BufferAccessType::ReadWrite );
     EXPECT_EQ( data->getSize(), 100u );
@@ -137,7 +137,7 @@ TEST_F( RenderCommonTest, allocBufferDataTest ) {
 TEST_F( RenderCommonTest, copyBufferDataTest ) {
     BufferData *data( BufferData::alloc( BufferType::VertexBuffer, 100, BufferAccessType::ReadWrite ) );
 
-    static const ui32 size = 100;
+    static const size_t size = 100;
     static const unsigned char Value = 9;
     void *buffer( new unsigned char[ size ] );
     ::memset( buffer, Value, size );
@@ -146,13 +146,13 @@ TEST_F( RenderCommonTest, copyBufferDataTest ) {
 }
 
 TEST_F( RenderCommonTest, accessGeometryTest ) {
-    Mesh *geo( nullptr );
-    geo = Mesh::create( 0 );
-    EXPECT_EQ( geo, nullptr );
-    geo = Mesh::create( 1 );
-    EXPECT_NE( geo, nullptr );
-    Mesh::destroy( &geo );
-    EXPECT_EQ( geo, nullptr );
+    Mesh *mesh( nullptr );
+    mesh = Mesh::create( 0 );
+    EXPECT_EQ( mesh, nullptr );
+    mesh = Mesh::create( 1 );
+    EXPECT_NE( mesh, nullptr );
+    Mesh::destroy( &mesh );
+    EXPECT_EQ( mesh, nullptr );
 }
 
 TEST_F(RenderCommonTest, initGeometryTest) {
@@ -166,12 +166,12 @@ TEST_F(RenderCommonTest, initGeometryTest) {
 
 TEST_F( RenderCommonTest, geometryIdTest ) {
     static const ui32 NumGeo = 10;
-    ui32 ids[ NumGeo ];
+    guid ids[NumGeo];
     ::memset( ids, 0, sizeof( ui32 ) * NumGeo );
     Mesh *mesh = Mesh::create( NumGeo );
-    ui32 oldId( mesh[ 0 ].m_id );
+    ui64 oldId( mesh[ 0 ].m_id );
     for ( ui32 i = 1; i < NumGeo; i++ ) {
-        ui32 id( mesh[ i ].m_id );
+        const guid id = mesh[i].m_id;
         EXPECT_EQ( id, oldId + 1 );
         oldId = id;
     }
@@ -205,7 +205,7 @@ TEST_F( RenderCommonTest, accessMaterialTest ) {
 }
 
 TEST_F(RenderCommonTest, access_material_param_Test) {
-    Material *mat( new Material( "test" ) );
+    Material *mat = new Material( "test" );
     mat->m_shader = new Shader;
     mat->m_shader->m_parameters.add( "MVP" );
 
@@ -257,4 +257,3 @@ TEST_F(RenderCommonTest, uniformBufferEncodeDecodeTest) {
 
 } // Namespace UnitTest
 } // Namespace OSRE
-

@@ -45,7 +45,7 @@ namespace Details {
     static const c8* Tag = "Project";
     static const c8* EmptyAttributeToken = "empty";
 
-    static String buildVersionString(i32 major, i32 minor) {
+    static String buildVersionString(i64 major, i64 minor) {
         std::stringstream stream;
 
         stream << "v" << major << "." << minor;
@@ -164,7 +164,7 @@ bool Project::load(const String& name, i32 &major, i32 &minor, i32 flags) {
     return true;
 }
 
-bool Project::save(const String &name, i32 /*flags*/ ) {
+bool Project::save(const String &name, i32 /*flags*/) {
     if (!isCreated()) {
         return false;
     }
@@ -215,7 +215,15 @@ bool Project::save(const String &name, i32 /*flags*/ ) {
     return res;
 }
 
-bool Project::loadMetadata(i32& major, i32& minor) {
+void Project::clear() {
+    m_version.mMajor = -1;
+    m_version.mMinor = -1;
+    m_flags = 0;
+    m_projectName = "";
+    m_activeWorld->release();
+    m_activeWorld = nullptr;
+}
+bool Project::loadMetadata(i32 &major, i32 &minor) {
     String metaName = m_projectName + ".proj";
 
     std::ifstream file;
@@ -247,7 +255,7 @@ bool Project::loadMetadata(i32& major, i32& minor) {
     return result;
 }
 
-bool Project::saveMetadata(i32 major, i32 minor, Json::StreamWriter* streamWriter) {
+bool Project::saveMetadata(i32 major, i32 minor, Json::StreamWriter *streamWriter) {
     String metaName = m_projectName + ".proj";
     Json::Value meta;
     meta["name"] = m_projectName;

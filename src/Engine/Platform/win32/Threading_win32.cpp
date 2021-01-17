@@ -273,7 +273,7 @@ ui32 WINAPI Thread::ThreadFunc(LPVOID data) {
     id.Id = ::GetCurrentThreadId();
     SystemInfo::registerThreadName(id, thread->getName());
     thread->setThreadId(id);
-    const i32 retCode(thread->run());
+    const i64 retCode(thread->run());
 
     return retCode;
 }

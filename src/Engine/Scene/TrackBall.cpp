@@ -157,7 +157,7 @@ void TrackBall::zoom(ui32 y) {
     m_screenY = y;
     const f32 offset = 0.00005f;
     if (m_screenYOld) {
-        const i32 diff = m_screenY - m_screenYOld;
+        const i64 diff = m_screenY - m_screenYOld;
         mRadius += offset * static_cast<f32>(diff);
     }
 }

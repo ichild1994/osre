@@ -38,6 +38,7 @@ class OSRE_EXPORT MaterialBuilder {
 public:
     static void create();
     static void destroy();
+    static RenderBackend::Material *createShaderMaterial(const String &matName, const String &vertexShader, const String &fragmentShader);
     static RenderBackend::Material *createBuildinMaterial( RenderBackend::VertexType type );
     static RenderBackend::Material *createBuildinUiMaterial();
     static RenderBackend::Material* createTexturedMaterial(const String& matName, RenderBackend::TextureResourceArray& texResArray, 

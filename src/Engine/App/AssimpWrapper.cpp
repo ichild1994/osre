@@ -430,7 +430,7 @@ void AssimpWrapper::importMaterial(aiMaterial *material) {
         return;
     }
 
-    i32 texIndex(0);
+    i64 texIndex(0);
     aiString texPath; // contains filename of texture
     TextureResourceArray texResArray;
     if (AI_SUCCESS == material->GetTexture(aiTextureType_DIFFUSE, texIndex, &texPath)) {

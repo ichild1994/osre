@@ -27,12 +27,6 @@ public:
         Scene::MeshBuilder myBuilder;
         Mesh *mesh = myBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly).getMesh();
 
-        mesh->m_localMatrix = true;
-        TransformState transform;
-        transform.setTranslation(0.5f, 0, 0);
-        transform.setScale(0.2f, 0.2f, 0.2f);
-        transform.toMatrix(mesh->m_model);
-
         rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
         {
             rbSrv->beginRenderBatch("b1");

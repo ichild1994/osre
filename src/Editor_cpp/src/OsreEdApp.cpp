@@ -162,7 +162,28 @@ void OsreEdApp::newProject(ui32, void *) {
     AppBase::setWindowsTitle("OSRE ED!" + String(" Project: ") + projectName);
 }
 
-void OsreEdApp::loadProject(ui32, void *) {
+void saveProjectAction(Project *project, const IO::Uri &projectLocation) {
+
+}
+ 
+void loadProjectAction( Project *project, const IO::Uri &modelLoc ) {
+
+}
+
+void OsreEdApp::loadProject(ui32, void *) {{}
+    IO::Uri projectLocation;
+    if (mProject != nullptr) {
+        PlatformOperations::getFileSaveDialog("*", projectLocation);
+        if (projectLocation.isValid()) {
+            saveProjectAction(mProject, projectLocation);
+        }
+    }
+
+    PlatformOperations::getFileOpenDialog("*", projectLocation);
+    if (projectLocation.isValid()) {
+        
+        loadProjectAction(mProject, projectLocation);
+    }
 }
 
 void OsreEdApp::saveProject(ui32, void *) {

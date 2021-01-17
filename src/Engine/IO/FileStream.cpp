@@ -162,19 +162,19 @@ ui32 FileStream::write(const void *buffer, ui32 size) {
     return 0;
 }
 
-ui32 FileStream::readI32(i32 &value) {
+ui32 FileStream::readI32(i64 &value) {
     OSRE_ASSERT(nullptr != m_file);
     if (m_file) {
-        return (static_cast<ui32>(::fread(&value, sizeof(i32), 1, m_file)));
+        return (static_cast<ui32>(::fread(&value, sizeof(i64), 1, m_file)));
     }
 
     return 0;
 }
 
-ui32 FileStream::writeI32(i32 value) {
+ui32 FileStream::writeI32(i64 value) {
     OSRE_ASSERT(nullptr != m_file);
     if (m_file) {
-        return (static_cast<ui32>(::fwrite(&value, sizeof(i32), 1, m_file)));
+        return (static_cast<ui32>(::fwrite(&value, sizeof(i64), 1, m_file)));
     }
 
     return 0;
@@ -201,7 +201,7 @@ ui32 FileStream::writeUI32(ui32 value) {
 FileStream::Position FileStream::seek(Offset offset, Origin origin) {
     OSRE_ASSERT(nullptr != m_file);
 
-    i32 originValue(0);
+    i64 originValue(0);
     if (origin == Stream::Origin::Current) {
         originValue = SEEK_CUR;
     } else {

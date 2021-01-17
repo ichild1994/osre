@@ -344,9 +344,8 @@ bool Win32EventQueue::isPolling() const {
 }
 
 void Win32EventQueue::registerEventListener(const EventPtrArray &events, OSEventListener *pListener) {
-    OSRE_ASSERT(nullptr != m_eventTriggerer);
-
     if (nullptr == m_eventTriggerer) {
+        OSRE_ASSERT(nullptr != m_eventTriggerer);
         osre_error(Tag, "Pointer to event-triggerer is nullptr.");
         return;
     }
@@ -356,9 +355,8 @@ void Win32EventQueue::registerEventListener(const EventPtrArray &events, OSEvent
 }
 
 void Win32EventQueue::unregisterEventListener(const EventPtrArray &events, OSEventListener *pListener) {
-    OSRE_ASSERT(nullptr != m_eventTriggerer);
-
     if (nullptr == m_eventTriggerer) {
+        OSRE_ASSERT(nullptr != m_eventTriggerer);
         osre_error(Tag, "Pointer to event-triggerer is nullptr.");
         return;
     }
@@ -368,9 +366,8 @@ void Win32EventQueue::unregisterEventListener(const EventPtrArray &events, OSEve
 }
 
 void Win32EventQueue::unregisterAllEventHandler(const EventPtrArray &events) {
-    OSRE_ASSERT(nullptr != m_eventTriggerer);
-
     if (nullptr == m_eventTriggerer) {
+        OSRE_ASSERT(nullptr != m_eventTriggerer);
         osre_error(Tag, "Pointer to event-triggerer is nullptr.");
         return;
     }

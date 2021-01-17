@@ -176,9 +176,9 @@ public:
 
     StencilState();
     ~StencilState();
-    void setStencilFunc(StencilFunc, i32 ref, c8 mask);
+    void setStencilFunc(StencilFunc, i64 ref, c8 mask);
     StencilFunc getStencilFunc() const;
-    i32 getStencilFuncRef() const;
+    i64 getStencilFuncRef() const;
     uc8 getStencilFuncMask() const;
     void setStencilOp(StencilOp sFail, StencilOp dpFail, StencilOp dppass);
     StencilOp getStencilOpSFail() const;
@@ -189,7 +189,7 @@ public:
 
 private:
     StencilFunc m_stencilFunc;
-    i32 m_stencilFuncRef;
+    i64 m_stencilFuncRef;
     uc8 m_stencilFuncMask;
     StencilOp m_sFail;
     StencilOp m_dpFail;
@@ -205,7 +205,7 @@ inline StencilState::~StencilState() {
     // empty
 }
 
-inline void StencilState::setStencilFunc(StencilFunc func, i32 ref, c8 mask) {
+inline void StencilState::setStencilFunc(StencilFunc func, i64 ref, c8 mask) {
     m_stencilFunc = func;
     m_stencilFuncRef = ref;
     m_stencilFuncMask = mask;
@@ -215,7 +215,7 @@ inline StencilState::StencilFunc StencilState::getStencilFunc() const {
     return m_stencilFunc;
 }
 
-inline i32 StencilState::getStencilFuncRef() const {
+inline i64 StencilState::getStencilFuncRef() const {
     return m_stencilFuncRef;
 }
 

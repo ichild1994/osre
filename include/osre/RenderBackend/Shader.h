@@ -29,16 +29,30 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 namespace OSRE {
 namespace RenderBackend {
 
-class OSRE_EXPORT Shader {
+class Shader;
+
+class ShaderLoader {
+public:
+    ShaderLoader();
+    ~ShaderLoader();
+    size_t load(const IO::Uri &uri, Shader *shader);
+    bool unload(Texture *tex);
+};
+
+class OSRE_EXPORT Shader : public Common::TResource<Shader, ShaderLoader> {
 public:
     CPPCore::TArray<String>  m_parameters;
     CPPCore::TArray<String>  m_attributes;
     String                   m_src[MaxShaderTypes];
 
-    Shader();
+    Shader(const String &name);
     ~Shader();
     void setSource(ShaderType type, const String &src);
+    bool loadSourceFromFile(ShaderType type, const IO::Uri &file);
 
+protected:
+    Common::ResourceState onLoad(const IO::Uri &uri, ShaderLoader &loader) override;
+    Common::ResourceState onUnload(ShaderLoader &loader) override;
 
     OSRE_NON_COPYABLE(Shader)
 

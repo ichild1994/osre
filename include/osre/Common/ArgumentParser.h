@@ -58,7 +58,7 @@ public:
     ///	@param	ppArgv          [in] The arguments itself.
     ///	@param	supportedArgs   [in] Description of the supported arguments, separated by :.
     ///	@param  desc            [in] The argument description, separated by :.
-    ArgumentParser( i32 argc, const c8 *ppArgv[], const String &supportedArgs, const String &desc );
+    ArgumentParser( i64 argc, const c8 *ppArgv[], const String &supportedArgs, const String &desc );
     
     ///	@brief	The class destructor.
     ~ArgumentParser();
@@ -127,7 +127,7 @@ protected:
     /// @brief	Will validate the args.
     /// @param	iArgc	[in] Number of incomping args.
     ///	@param	ppArgv	[in] The arguments.
-    bool validateArguments( i32 iArgc, const c8 *ppArgv[] );
+    bool validateArguments( i64 iArgc, const c8 *ppArgv[] );
     void setInvalid();
 
 private:

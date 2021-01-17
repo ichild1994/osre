@@ -289,8 +289,7 @@ OGLVertexArray *addMesh(OGLRenderBackend *oglRB, MeshEntry *currentMeshEntry, si
 
     // setup the draw calls
     if (0 == currentMeshEntry->numInstances) {
-        setupPrimDrawCmd(currentBatchData->m_id, currentMesh->m_localMatrix, currentMesh->m_model,
-                primGroups, oglRB, parent, va);
+        setupPrimDrawCmd(currentBatchData->m_id, primGroups, oglRB, parent, va);
     } else {
         setupInstancedDrawCmd(currentBatchData->m_id, primGroups, oglRB, parent, va,
                 currentMeshEntry->numInstances);

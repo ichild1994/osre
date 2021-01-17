@@ -94,7 +94,7 @@ public:
 	void setTimer(Platform::AbstractTimer *timer);
 	void setRenderContext(Platform::AbstractOGLRenderContext *renderCtx);
 	void clearRenderTarget(const ClearState &clearState);
-	void setViewport(i32 x, i32 y, i32 w, i32 h);
+    void setViewport(i32 x, i32 y, i32 w, i32 h);
 	OGLBuffer *createBuffer(BufferType type);
 	OGLBuffer *getBufferById(ui32 geoId);
 	void bindBuffer(ui32 handle);

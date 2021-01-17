@@ -49,7 +49,7 @@ RenderCmdBuffer::RenderCmdBuffer(OGLRenderBackend *renderBackend, AbstractOGLRen
     OSRE_ASSERT(nullptr != m_renderCtx);
     OSRE_ASSERT(nullptr != m_pipeline);
 
-    m_clearState.m_state = (i32)ClearState::ClearBitType::ColorBit | (i32)ClearState::ClearBitType::DepthBit;
+    m_clearState.m_state = (i64)ClearState::ClearBitType::ColorBit | (i64)ClearState::ClearBitType::DepthBit;
 }
 
 RenderCmdBuffer::~RenderCmdBuffer() {
@@ -211,6 +211,7 @@ void RenderCmdBuffer::setMatrixes(const glm::mat4 &model, const glm::mat4 &view,
     m_model = model;
     m_view = view;
     m_proj = proj;
+    m_renderbackend->applyMatrix();
 }
 
 void RenderCmdBuffer::setMatrixBuffer(const c8 *id, MatrixBuffer *buffer) {
@@ -232,10 +233,6 @@ bool RenderCmdBuffer::onDrawPrimitivesCmd(DrawPrimitivesCmdData *data) {
     }
 
     m_renderbackend->bindVertexArray(data->m_vertexArray);
-    if (data->m_localMatrix) {
-        m_renderbackend->setMatrix(MatrixType::Model, data->m_model);
-        m_renderbackend->applyMatrix();
-    }
     for (size_t i = 0; i < data->m_primitives.size(); ++i) {
         m_renderbackend->render(data->m_primitives[i]);
     }

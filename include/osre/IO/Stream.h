@@ -129,12 +129,12 @@ public:
     /// @brief  Reads a given i32 value.
     /// @param  value       [out] The i32-value to read-
     /// @return The number of written bytes.
-    virtual ui32 readI32( i32 &value );
+    virtual ui32 readI32( i64 &value );
 
     /// @brief  Writes a given i32 value into the stream.
     /// @param  value       [in] The i32-value to write.
     /// @return The number of written bytes.
-    virtual ui32 writeI32( i32 value );
+    virtual ui32 writeI32( i64 value );
 
     /// @brief  Reads a given ui32 value.
     /// @param  value       [out] The ui32-value to read.

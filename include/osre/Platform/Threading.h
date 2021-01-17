@@ -314,7 +314,7 @@ private:
 #ifdef OSRE_WINDOWS
     HANDLE m_EventHandle;
 #else
-    i32 m_bool;
+    i64 m_bool;
     SDL_mutex *m_lock;
     SDL_cond *m_event;
 #endif // _WIN32
@@ -405,7 +405,7 @@ inline i32 AtomicInt::dec() {
 
 #else
 
-inline AtomicInt::AtomicInt( i32 value ) {
+inline AtomicInt::AtomicInt(i32 value) {
     SDL_AtomicSet( &m_value, value );
 }
 
@@ -413,24 +413,24 @@ inline AtomicInt::~AtomicInt( ) {
     // empty
 }
 
-inline void AtomicInt::incValue( i32 value ) {
+inline void AtomicInt::incValue(i32 value) {
     SDL_AtomicAdd( &m_value, value );
 }
 
-inline void AtomicInt::decValue( i32 value ) {
+inline void AtomicInt::decValue(i32 value) {
     SDL_AtomicAdd( &m_value, -value );
 }
 
-inline i32 AtomicInt::getValue( ) {
+inline i32 AtomicInt::getValue() {
     return ( SDL_AtomicGet( &m_value ) );
 }
 
-inline i32 AtomicInt::inc( ) {
+inline i32 AtomicInt::inc() {
     SDL_AtomicIncRef( &m_value );
     return getValue();
 }
 
-inline i32 AtomicInt::dec( ) {
+inline i32 AtomicInt::dec() {
     SDL_AtomicDecRef( &m_value );
     return getValue();
 }
@@ -444,7 +444,7 @@ public:
     Thread *createThread(const String &name, ui32 stacksize);
     CriticalSection *createCriticalSection();
     ThreadEvent *createThreadEvent();
-    AtomicInt *createAtomicInt(i32 val);
+    AtomicInt *createAtomicInt(i64 val);
     ThreadLocalStorage *createThreadLocalStorage();
 };
 

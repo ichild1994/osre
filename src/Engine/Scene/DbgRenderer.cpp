@@ -83,11 +83,13 @@ void DbgRenderer::renderDbgText(ui32 x, ui32 y, ui32 id, const String &text) {
         mFontRenderer = new UI::FontRenderer();
     }
     m_rbSrv->beginPass(PipelinePass::getPassNameById(DbgPassId));
-    m_rbSrv->beginRenderBatch("dbgFontBatch");
-
-    mFontRenderer->AddRenderText(x, y, id, text, m_rbSrv);
-
+    {
+        m_rbSrv->beginRenderBatch("dbgFontBatch");
+        {
+            mFontRenderer->AddRenderText(x, y, id, text, m_rbSrv);
+        }
         m_rbSrv->endRenderBatch();
+    }
     m_rbSrv->endPass();
 }
 
@@ -159,7 +161,6 @@ void DbgRenderer::renderAABB(const glm::mat4 &transform, const TAABB<f32> &aabb)
     mesh->m_ib->copyFrom(&indices[0], indexSize);
 
     // setup primitives
-    mesh->m_model = transform;
     mesh->m_numPrimGroups = 1;
 
     mesh->m_primGroups = new PrimitiveGroup[1];
@@ -167,8 +168,6 @@ void DbgRenderer::renderAABB(const glm::mat4 &transform, const TAABB<f32> &aabb)
 
     // setup material
     mesh->m_material = MaterialBuilder::createBuildinMaterial(VertexType::ColorVertex);
-
-    mesh->m_model = transform;
 
     m_rbSrv->beginPass(PipelinePass::getPassNameById(DbgPassId));
     m_rbSrv->beginRenderBatch("dbgFontBatch");

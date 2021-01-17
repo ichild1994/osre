@@ -45,20 +45,24 @@ public:
         // empty
     }
 
+    bool operator==( const ResourceId &rhs ) {
+        return rhs.mResId == mResId;
+    }
+
 private:
     ui64 mResId;
+};
+
+enum class ResourceState {
+    Uninitialized,
+    Unloaded,
+    Loaded,
+    Error
 };
 
 template <class TResType, class TResLoader>
 class TResource : public Object {
 public:
-    enum ResourceState {
-        Uninitialized,
-        Unloaded,
-        Loaded,
-        Error
-    };
-
     TResource(const String &name, const IO::Uri &uri);
     virtual ~TResource();
     void setUri(const IO::Uri &uri);
@@ -85,7 +89,7 @@ private:
 template <class TResType, class TResLoader>
 inline TResource<TResType, TResLoader>::TResource(const String &name, const IO::Uri &uri) :
         Object(name),
-        m_state(Uninitialized),
+        m_state(ResourceState::Uninitialized),
         m_uri(uri),
         m_res(nullptr) {
     ::memset(&m_stats, 0, sizeof(ResourceStatistics));
@@ -111,7 +115,7 @@ inline const IO::Uri &TResource<TResType, TResLoader>::getUri() const {
 }
 
 template <class TResType, class TResLoader>
-inline typename TResource<TResType, TResLoader>::ResourceState TResource<TResType, TResLoader>::getState() const {
+inline ResourceState TResource<TResType, TResLoader>::getState() const {
     return m_state;
 }
 
@@ -131,14 +135,12 @@ inline ResourceStatistics &TResource<TResType, TResLoader>::getStats() {
 }
 
 template <class TResType, class TResLoader>
-inline
-        typename TResource<TResType, TResLoader>::ResourceState
-        TResource<TResType, TResLoader>::load(TResLoader &loader) {
+inline ResourceState TResource<TResType, TResLoader>::load(TResLoader &loader) {
     return onLoad(getUri(), loader);
 }
 
 template <class TResType, class TResLoader>
-inline typename TResource<TResType, TResLoader>::ResourceState TResource<TResType, TResLoader>::unload(TResLoader &loader) {
+inline ResourceState TResource<TResType, TResLoader>::unload(TResLoader &loader) {
     return onUnload(loader);
 }
 

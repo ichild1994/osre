@@ -162,8 +162,8 @@ VertexLayout::~VertexLayout() {
 
 void VertexLayout::clear() {
     if (!m_components.isEmpty()) {
-        for (size_t i = 0; i < m_components.size(); ++i) {
-            delete m_components[i];
+        for (auto &component : m_components) {
+            delete component;
         }
         m_components.clear();
     }
@@ -174,9 +174,9 @@ void VertexLayout::clear() {
 
 size_t VertexLayout::sizeInBytes() {
     if (0 == m_sizeInBytes) {
-        for (size_t i = 0; i < m_components.size(); ++i) {
+        for (auto &component : m_components) {
             const size_t compSizeInBytes(
-                    getVertexFormatSize(m_components[i]->m_format));
+                    getVertexFormatSize(component->m_format));
             m_sizeInBytes += compSizeInBytes;
         }
     }
@@ -192,6 +192,7 @@ VertexLayout &VertexLayout::add(VertComponent *comp) {
     if (nullptr == comp) {
         return *this;
     }
+
     m_components.add(comp);
     const size_t offset(getVertexFormatSize(comp->m_format));
     m_offsets.add(m_currentOffset);
@@ -284,7 +285,10 @@ BufferAccessType BufferData::getBufferAccessType() const {
 }
 
 PrimitiveGroup::PrimitiveGroup() :
-        m_primitive(PrimitiveType::LineList), m_startIndex(0), m_numIndices(0), m_indexType(IndexType::UnsignedShort) {
+        m_primitive(PrimitiveType::LineList),
+        m_startIndex(0),
+        m_numIndices(0),
+        m_indexType(IndexType::UnsignedShort) {
     // empty
 }
 
@@ -322,11 +326,11 @@ size_t TextureLoader::load(const IO::Uri &uri, Texture *tex) {
         return 0;
     }
 
-    const String filename = uri.getAbsPath();
+    const String &filename = uri.getAbsPath();
     if (filename.find("$default") != String::npos) {
         tex = TextureLoader::getDefaultTexture();
     }
-    String root = App::AssetRegistry::getPath("media");
+    String root = App::AssetRegistry::getPath("assets");
     String path = App::AssetRegistry::resolvePathFromUri(uri);
 
     i32 width = 0, height = 0, channels = 0;
@@ -340,10 +344,10 @@ size_t TextureLoader::load(const IO::Uri &uri, Texture *tex) {
     tex->m_channels = channels;
 
     // swap the texture data
-    for (i32 j = 0; j * 2 < height; ++j) {
-        i32 index1 = j * width * channels;
-        i32 index2 = (height - 1 - j) * width * channels;
-        for (i32 i = width * channels; i > 0; --i) {
+    for (i64 j = 0; j * 2 < height; ++j) {
+        i64 index1 = j * width * channels;
+        i64 index2 = (height - 1 - j) * width * channels;
+        for (i64 i = width * channels; i > 0; --i) {
             uc8 temp = tex->m_data[index1];
             tex->m_data[index1] = tex->m_data[index2];
             tex->m_data[index2] = temp;
@@ -427,49 +431,48 @@ TextureLoader::~TextureLoader() {
     // empty
 }
 
-TextureResource::ResourceState TextureResource::onLoad(const IO::Uri &uri,
+ResourceState TextureResource::onLoad(const IO::Uri &uri,
         TextureLoader &loader) {
-    if (getState() == Loaded) {
-        return Error;
+    if (getState() == ResourceState::Loaded) {
+        return ResourceState::Error;
     }
 
     create();
     Texture *tex = get();
     if (nullptr == tex) {
-        return Error;
+        return ResourceState::Error;
     }
 
     tex->m_textureName = getName();
     if (tex->m_textureName.find("$default") != String::npos) {
         tex = TextureLoader::getDefaultTexture();
-        setState(Loaded);
-        return Loaded;
+        setState(ResourceState::Loaded);
+        return ResourceState::Loaded;
     }
 
     getStats().m_memory = loader.load(uri, tex);
     tex->m_targetType = m_targetType;
     if (0 == getStats().m_memory) {
-        setState(Error);
+        setState(ResourceState::Error);
         osre_debug(Tag, "Cannot load texture " + uri.getAbsPath());
-        return Error;
+        return ResourceState::Error;
     }
 
-    setState(Loaded);
+    setState(ResourceState::Loaded);
 
-    return Loaded;
+    return ResourceState::Loaded;
 }
 
-TextureResource::ResourceState
-TextureResource::onUnload(TextureLoader &loader) {
-    if (getState() == Unloaded) {
-        return Error;
+ResourceState TextureResource::onUnload(TextureLoader &loader) {
+    if (getState() == ResourceState::Unloaded) {
+        return ResourceState::Error;
     }
 
     loader.unload(get());
     getStats().m_memory = 0;
-    setState(Unloaded);
+    setState(ResourceState::Unloaded);
 
-    return Unloaded;
+    return getState();
 }
 
 Material::Material(const String &name) :
@@ -517,13 +520,15 @@ Material::~Material() {
     m_textures = nullptr;
 }
 
-void Material::createShader(ShaderSourceArray &shaders) {
+Shader *Material::createShader(ShaderSourceArray &shaders) {
     m_shader = new Shader;
     for (ui32 i = 0; i < MaxShaderTypes; ++i) {
         if (!shaders[i].empty()) {
             m_shader->m_src[i] = shaders[i];
         }
     }
+
+    return m_shader;
 }
 
 GeoInstanceData::GeoInstanceData() :
@@ -605,7 +610,7 @@ Viewport::Viewport() :
     // empty
 }
 
-Viewport::Viewport(i32 x, i32 y, i32 w, i32 h) :
+Viewport::Viewport(i64 x, i64 y, i64 w, i64 h) :
         m_x(x), m_y(y), m_w(w), m_h(h) {
     // empty
 }
@@ -636,10 +641,10 @@ MeshEntry *RenderBatchData::getMeshEntryByName(const c8 *name) {
         return nullptr;
     }
 
-    for (ui32 i = 0; i < m_meshArray.size(); ++i) {
-        for (ui32 j = 0; j < m_meshArray[i]->mMeshArray.size(); ++j) {
-            if (m_meshArray[i]->mMeshArray[j]->m_name == name) {
-                return m_meshArray[i];
+    for (auto &i : m_meshArray) {
+        for (ui32 j = 0; j < i->mMeshArray.size(); ++j) {
+            if (i->mMeshArray[j]->m_name == name) {
+                return i;
             }
         }
     }
@@ -652,9 +657,9 @@ UniformVar *RenderBatchData::getVarByName(const c8 *name) {
         return nullptr;
     }
 
-    for (ui32 i = 0; i < m_uniforms.size(); ++i) {
-        if (m_uniforms[i]->m_name == name) {
-            return m_uniforms[i];
+    for (auto &uniform : m_uniforms) {
+        if (uniform->m_name == name) {
+            return uniform;
         }
     }
 
@@ -667,7 +672,6 @@ RenderBatchData *PassData::getBatchById(const c8 *id) const {
     }
 
     for (ui32 i = 0; i < m_geoBatches.size(); ++i) {
-
         if (0 == strncmp(m_geoBatches[i]->m_id, id, strlen(id))) {
             return m_geoBatches[i];
         }
@@ -692,8 +696,8 @@ void Frame::init(TArray<PassData *> &newPasses) {
     if (newPasses.isEmpty()) {
         return;
     }
-    for (ui32 i = 0; i < newPasses.size(); ++i) {
-        m_newPasses.add(newPasses[i]);
+    for (auto newPasse : newPasses) {
+        m_newPasses.add(newPasse);
     }
     m_uniforBuffers = new UniformBuffer[newPasses.size()];
 }
@@ -730,7 +734,7 @@ UniformDataBlob *UniformDataBlob::create(ParameterType type, size_t arraySize) {
     UniformDataBlob *blob = new UniformDataBlob;
     switch (type) {
         case ParameterType::PT_Int:
-            blob->m_size = sizeof(i32);
+            blob->m_size = sizeof(i64);
             break;
         case ParameterType::PT_Float:
             blob->m_size = sizeof(f32);
@@ -752,13 +756,21 @@ UniformDataBlob *UniformDataBlob::create(ParameterType type, size_t arraySize) {
             break;
     }
     blob->m_data = ::malloc(blob->m_size);
+    if (nullptr == blob->m_data) {
+        delete blob;
+        return nullptr;
+    }
+
     ::memset(blob->m_data, 0, blob->m_size);
 
     return blob;
 }
 
 UniformVar::UniformVar() :
-        m_name(""), m_type(ParameterType::PT_None), m_numItems(1), m_next(nullptr) {
+        m_name(""),
+        m_type(ParameterType::PT_None),
+        m_numItems(1),
+        m_next(nullptr) {
     // empty
 }
 
@@ -770,7 +782,7 @@ ui32 UniformVar::getParamDataSize(ParameterType type, ui32 arraySize) {
     ui32 size(0);
     switch (type) {
         case ParameterType::PT_Int:
-            size = sizeof(i32);
+            size = sizeof(i64);
             break;
         case ParameterType::PT_Float:
             size = sizeof(f32);

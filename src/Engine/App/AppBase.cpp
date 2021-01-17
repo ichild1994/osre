@@ -115,7 +115,7 @@ private:
 };
 
 
-AppBase::AppBase(i32 argc, const c8 *argv[], const String &supportedArgs, const String &desc) :
+AppBase::AppBase(i64 argc, const c8 *argv[], const String &supportedArgs, const String &desc) :
         m_state(State::Uninited),
         m_argParser(argc, argv, supportedArgs, desc),
         m_environment(nullptr),

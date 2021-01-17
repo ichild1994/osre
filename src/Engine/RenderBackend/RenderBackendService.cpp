@@ -48,7 +48,7 @@ static const c8 *Tag = "RenderBackendService";
 static const c8 *OGL_API = "opengl";
 static const c8 *Vulkan_API = "vulkan";
 
-static i32 hasPass(const c8 *id, const ::CPPCore::TArray<PassData *> &passDataArray) {
+static i64 hasPass(const c8 *id, const ::CPPCore::TArray<PassData *> &passDataArray) {
     for (ui32 i = 0; i < passDataArray.size(); ++i) {
         if (0 == strncmp(passDataArray[i]->m_id, id, strlen(id))) {
             return i;
@@ -57,7 +57,7 @@ static i32 hasPass(const c8 *id, const ::CPPCore::TArray<PassData *> &passDataAr
     return -1;
 }
 
-static i32 hasBatch(const c8 *id, const ::CPPCore::TArray<RenderBatchData *> &batchDataArray) {
+static i64 hasBatch(const c8 *id, const ::CPPCore::TArray<RenderBatchData *> &batchDataArray) {
     for (ui32 i = 0; i < batchDataArray.size(); ++i) {
         if (0 == strncmp(batchDataArray[i]->m_id, id, strlen(id))) {
             return i;
@@ -481,14 +481,15 @@ void RenderBackendService::attachView() {
 }
 
 void RenderBackendService::resize(ui32 x, ui32 y, ui32 w, ui32 h) {
+    if (m_screen != nullptr) {
+        m_screen->resize(x, y, w, h);
+    }
+
     if (mBehaviour.ResizeViewport) {
         ResizeEventData *data = new ResizeEventData(x, y, w, h);
         m_renderTaskPtr->sendEvent(&OnResizeEvent, data);
     }
 
-    if (m_screen != nullptr) {
-        m_screen->resize(x, y, w, h);
-    }
 }
 
 void RenderBackendService::focusLost() {

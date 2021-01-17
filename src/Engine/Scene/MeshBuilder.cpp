@@ -388,7 +388,10 @@ static size_t getNumTextIndices(const String &text) {
     return numIndices;
 }
 
-static void generateTextBoxVerticesAndIndices(f32 x, f32 y, f32 textSize, const String &text, 
+static void generateTextBoxVerticesAndIndices2D(f32 x, f32 y, const String &text, glm::vec4 color) {
+}
+
+static void generateTextBoxVerticesAndIndices3D(f32 x, f32 y, f32 textSize, const String &text, 
         glm::vec3 **textPos, glm::vec3 **colors, glm::vec2 **tex0, GLushort **textIndices) {
     OSRE_ASSERT(nullptr != textPos);
     OSRE_ASSERT(nullptr != colors);
@@ -444,8 +447,8 @@ static void generateTextBoxVerticesAndIndices(f32 x, f32 y, f32 textSize, const 
 
         //GeometryDiagnosticUtils::dumpTextBox( i, textPos, VertexOffset );
 
-        const i32 column = (ch) % 16;
-        const i32 row = (ch) / 16;
+        const i64 column = (ch) % 16;
+        const i64 row = (ch) / 16;
         const f32 s = column * invCol;
         const f32 t = (row + 1) * invRow;
 
@@ -490,7 +493,7 @@ MeshBuilder &MeshBuilder::allocTextBox( f32 x, f32 y, f32 textSize, const String
     glm::vec3 *textPos( nullptr ), *colors(nullptr );
     glm::vec2 *tex0(nullptr);
     GLushort *textIndices(nullptr);
-    generateTextBoxVerticesAndIndices(x,y,textSize, text, &textPos, &colors, &tex0, &textIndices);
+    generateTextBoxVerticesAndIndices3D(x,y,textSize, text, &textPos, &colors, &tex0, &textIndices);
 
     //GeometryDiagnosticUtils::dumpIndices( textIndices, 6 * text.size() );
 
@@ -523,12 +526,12 @@ static f32 getZbyStackIndex(f32 stackIndex) {
     return result;
 }
 
-void MeshBuilder::allocUiTextBox(f32 x, f32 y, i32 stackIndex, f32 textSize, const String &text, BufferAccessType access,
+void MeshBuilder::allocUiTextBox(f32 x, f32 y, i64 stackIndex, f32 textSize, const String &text, BufferAccessType access,
         UiVertexCache &vc, UiIndexCache &ic) {
     glm::vec3 *textPos(nullptr), *colors(nullptr);
     glm::vec2 *tex0(nullptr);
     GLushort *textIndices(nullptr);
-    generateTextBoxVerticesAndIndices(x, y, textSize, text, &textPos, &colors, &tex0, &textIndices);
+    generateTextBoxVerticesAndIndices3D(x, y, textSize, text, &textPos, &colors, &tex0, &textIndices);
     const size_t offset = vc.numVertices();
     const size_t numNewVerts = getNumTextVerts(text);
     for (size_t i = 0; i < numNewVerts; i++) {
@@ -586,8 +589,8 @@ void MeshBuilder::updateTextBox( Mesh *geo, f32 textSize, const String &text ) {
 
         const ui32 VertexOffset( i * NumQuadVert );
 
-        const i32 column = ( ch ) % 16;
-        const i32 row = ( ch ) / 16;
+        const i64 column = ( ch ) % 16;
+        const i64 row = ( ch ) / 16;
         const f32 s = column * invCol;
         const f32 t = ( row + 1 ) * invRow;
 

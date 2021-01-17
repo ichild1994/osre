@@ -120,8 +120,8 @@ public:
     virtual void setProperty(UiProperty *prop);
     virtual UiProperty *getProperty(const String &name) const;
     virtual bool hasProperty(const String &name) const;
-    virtual void setStackIndex(i32 index);
-    virtual i32 getStackIndex() const;
+    virtual void setStackIndex(i64 index);
+    virtual i64 getStackIndex() const;
     virtual void setVisible(bool visible);
     virtual bool isVisible() const;
     virtual void setActive(bool isActive);
@@ -157,7 +157,7 @@ private:
     CPPCore::TArray<Widget *> m_children;
     CPPCore::TArray<UiProperty *> m_properties;
     Rect2ui m_rect;
-    i32 m_stackIndex;
+    i64 m_stackIndex;
     ui32 m_dirtyState;
     bool m_isVisible;
     bool m_isActive;

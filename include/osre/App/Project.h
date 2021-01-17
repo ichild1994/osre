@@ -48,8 +48,9 @@ public:
     World* getActiveWorld() const;
     i32 getMajorVersion() const;
     i32 getMinorVersion() const;
-    bool load(const String& name, i32& major, i32& minor, i32 flags);
-	bool save( const String &name, i32 flags);
+    bool load(const String &name, i32 &major, i32 &minor, i32 flags);
+    bool save(const String &name, i32 flags);
+    void clear();
 
 protected:
     bool loadMetadata(i32& major, i32& minor);
@@ -57,7 +58,7 @@ protected:
 
 private:
     Version m_version;
-    i32 m_flags;
+    i64 m_flags;
     String m_projectName;
     World *m_activeWorld;
 };

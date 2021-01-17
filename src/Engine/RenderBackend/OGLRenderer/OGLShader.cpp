@@ -108,14 +108,14 @@ bool OGLShader::createAndLink() {
         osre_error(Tag, "Error while creating shader program.");
         return false;
     }
-    if (0 != m_shaders[static_cast<i32>(ShaderType::SH_VertexShaderType)]) {
-        glAttachShader(m_shaderprog, m_shaders[static_cast<i32>(ShaderType::SH_VertexShaderType)]);
+    if (0 != m_shaders[static_cast<i64>(ShaderType::SH_VertexShaderType)]) {
+        glAttachShader(m_shaderprog, m_shaders[static_cast<i64>(ShaderType::SH_VertexShaderType)]);
     }
-    if (0 != m_shaders[static_cast<i32>(ShaderType::SH_FragmentShaderType)]) {
-        glAttachShader(m_shaderprog, m_shaders[static_cast<i32>(ShaderType::SH_FragmentShaderType)]);
+    if (0 != m_shaders[static_cast<i64>(ShaderType::SH_FragmentShaderType)]) {
+        glAttachShader(m_shaderprog, m_shaders[static_cast<i64>(ShaderType::SH_FragmentShaderType)]);
     }
-    if (0 != m_shaders[static_cast<i32>(ShaderType::SH_GeometryShaderType)]) {
-        glAttachShader(m_shaderprog, m_shaders[static_cast<i32>(ShaderType::SH_GeometryShaderType)]);
+    if (0 != m_shaders[static_cast<i64>(ShaderType::SH_GeometryShaderType)]) {
+        glAttachShader(m_shaderprog, m_shaders[static_cast<i64>(ShaderType::SH_GeometryShaderType)]);
     }
 
     bool result(true);
@@ -189,18 +189,18 @@ static i32 getActiveParam(ui32 progId, GLenum type) {
 }
 
 void OGLShader::getActiveAttributeList() {
-    const i32 numAtttibs(getActiveParam(m_shaderprog, GL_ACTIVE_ATTRIBUTES));
+    const ui32 numAtttibs(getActiveParam(m_shaderprog, GL_ACTIVE_ATTRIBUTES));
     if (numAtttibs < 1) {
         return;
     }
 
-    for (i32 i = 0; i < numAtttibs; i++) {
+    for (ui32 i = 0; i < numAtttibs; i++) {
         GLint actual_length(0), size(0);
         GLenum type;
         c8 name[MaxLen];
         glGetActiveAttrib(m_shaderprog, i, MaxLen, &actual_length, &size, &type, name);
         if (size > 1) {
-            for (i32 attribIdx = 0; attribIdx < size; attribIdx++) {
+            for (ui32 attribIdx = 0; attribIdx <(ui32) size; attribIdx++) {
                 ActiveParameter *attribParam = new ActiveParameter;
                 std::stringstream stream;
                 stream << name << attribIdx;
@@ -218,12 +218,12 @@ void OGLShader::getActiveAttributeList() {
 }
 
 void OGLShader::getActiveUniformList() {
-    const i32 numUniforms(getActiveParam(m_shaderprog, GL_ACTIVE_UNIFORMS));
+    const ui32 numUniforms(getActiveParam(m_shaderprog, GL_ACTIVE_UNIFORMS));
     if (numUniforms < 1) {
         return;
     }
 
-    for (i32 i = 0; i < numUniforms; i++) {
+    for (ui32 i = 0; i < numUniforms; i++) {
         GLint actual_length(0), size(0);
         GLenum type;
         c8 name[MaxLen];

@@ -29,7 +29,7 @@ namespace Platform {
 
 using namespace ::OSRE::Common;
 
-static const i32 NotInitesHandle = -1;
+static const i64 NotInitesHandle = -1;
 
 LibHandle::LibHandle()
 : m_index( NotInitesHandle )
@@ -60,7 +60,7 @@ void AbstractDynamicLoader::addLib( const String &libName, LibHandle *libHandle 
         return;
     }
 
-    libHandle->m_index = static_cast<i32>( m_handles.size() );
+    libHandle->m_index = static_cast<i64>( m_handles.size() );
     m_handles.add( libHandle );
     ui32 key( Common::StringUtils::hashName( libName ) );
     m_libmap.insert( key, libHandle );

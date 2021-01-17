@@ -47,7 +47,7 @@ class Pipeline;
 using MeshArray = CPPCore::TArray<RenderBackend::Mesh *>;
 
 /// Describes an unset id.
-static const i32 UnsetHandle = -1;
+static const i64 UnsetHandle = -1;
 
 /// Upper limits for names.
 static const ui32 MaxEntNameLen = 256;
@@ -468,8 +468,8 @@ public:
     TextureStageType setTextureStage() const;
 
 protected:
-    TextureResource::ResourceState onLoad(const IO::Uri &uri, TextureLoader &loader) override;
-    TextureResource::ResourceState onUnload(TextureLoader &loader) override;
+    Common::ResourceState onLoad(const IO::Uri &uri, TextureLoader &loader) override;
+    Common::ResourceState onUnload(TextureLoader &loader) override;
 
 private:
     TextureTargetType m_targetType;
@@ -503,7 +503,7 @@ struct OSRE_EXPORT Material {
     ~Material();
     void setMaterialType(MaterialType matType);
     MaterialType getMaterialType() const;
-    void createShader(ShaderSourceArray &shaders);
+    Shader *createShader(ShaderSourceArray &shaders);
 
     OSRE_NON_COPYABLE(Material)
 };
@@ -552,13 +552,13 @@ struct OSRE_EXPORT TransformMatrixBlock {
 
 ///	@brief
 struct OSRE_EXPORT Viewport {
-    i32 m_x;
-    i32 m_y;
-    i32 m_w;
-    i32 m_h;
+    i64 m_x;
+    i64 m_y;
+    i64 m_w;
+    i64 m_h;
 
     Viewport();
-    Viewport(i32 x, i32 y, i32 w, i32 h);
+    Viewport(i64 x, i64 y, i64 w, i64 h);
     ~Viewport();
     bool operator==(const Viewport &rhs) const;
     bool operator!=(const Viewport &rhs) const;
@@ -803,7 +803,7 @@ struct FrameSubmitCmd {
         UpdateUniforms = 16
     };
 
-    ui32 m_meshId;
+    guid m_meshId;
     const c8 *m_passId;
     const c8 *m_batchId;
     ui32 m_updateFlags;
@@ -924,11 +924,11 @@ struct Frame {
 };
 
 struct FrameBuffer {
-    i32 m_width;
-    i32 m_height;
-    i32 m_depth;
+    i64 m_width;
+    i64 m_height;
+    i64 m_depth;
 
-    FrameBuffer(i32 w, i32 h, i32 d) :
+    FrameBuffer(i64 w, i64 h, i64 d) :
             m_width(w), m_height(h), m_depth(d) {
         // empty
     }

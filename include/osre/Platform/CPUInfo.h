@@ -60,7 +60,7 @@ public:
 
 	///	@brief	Returns the properties of the CPU.
 	///	@return	Flag with the detected properties.
-	i32 getCPUProperties() const;
+	i64 getCPUProperties() const;
 
 	///	@brief	Returns true, if the CPUInfo was already initiated, false if not.
 	///	@return	The init state of the CPU info data.
@@ -75,7 +75,7 @@ protected:
 
 private:
 	static bool m_IsInited;
-	static i32 m_CPUFlags;
+	static i64 m_CPUFlags;
 	static ui32 m_NumCPUs;
 };
 

@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------------------------
 The MIT License (MIT)
 
-Copyright (c) 2015-2020 OSRE ( Open Source Render Engine ) by Kim Kulling
+Copyright (c) 2015-2021 OSRE ( Open Source Render Engine ) by Kim Kulling
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -43,12 +43,12 @@ BOOL CALLBACK GetMonitorByIndex(HMONITOR hMonitor, HDC, LPRECT, LPARAM dwData) {
     return TRUE;
 }
 
-static i32 monitorCount() {
+static ui32 monitorCount() {
     DISPLAY_DEVICE displayDevice;
     ::memset(&displayDevice, 0, sizeof(displayDevice));
     displayDevice.cb = sizeof(DISPLAY_DEVICE);
-    i32 deviceNum = 0;
-    while (EnumDisplayDevices(NULL, deviceNum, &displayDevice, 0)) {
+    ui32 deviceNum = 0;
+    while (EnumDisplayDevices(nullptr, deviceNum, &displayDevice, 0)) {
         ++deviceNum;
     }
 
@@ -65,19 +65,19 @@ Win32DisplayInterface::~Win32DisplayInterface() {
     // empty
 }
 
-i32 Win32DisplayInterface::getNumDisplays() {
-    const i32 displayCount = monitorCount();
+ui32 Win32DisplayInterface::getNumDisplays() {
+    const ui32 displayCount = monitorCount();
 
     if (0 == displayCount) {
         return 0;
     }
 
     m_monitorInfo.resize(displayCount);
-    for (i32 i = 0; i < displayCount; ++i) {
+    for (ui32 i = 0; i < displayCount; ++i) {
         MonitorInfo *info = new MonitorInfo;
         info->iIndex = i;
-        info->hMonitor = NULL;
-        EnumDisplayMonitors(NULL, NULL, GetMonitorByIndex, (LPARAM)info);
+        info->hMonitor = nullptr;
+        ::EnumDisplayMonitors(nullptr, nullptr, GetMonitorByIndex, (LPARAM)info);
         m_monitorInfo[i] = info;
     }
 
@@ -85,8 +85,7 @@ i32 Win32DisplayInterface::getNumDisplays() {
 }
 
 bool Win32DisplayInterface::getDisplayResolution(ui32 displayIndex, ui32 &width, ui32 &height) {
-    width = 0;
-    height = 0;
+    width = height = 0;
     if (displayIndex >= m_monitorInfo.size()) {
         return false;
     }
@@ -111,14 +110,14 @@ bool Win32DisplayInterface::getDisplayDPI(ui32 displayIndex, DisplayDPIInfo *ddp
         return false;
     }
 
-    ui32 dpiX, dpiY;
+    ui32 dpiX = 0, dpiY = 0;
     if (FALSE == ::GetDpiForMonitor(m_monitorInfo[displayIndex]->hMonitor, MDT_EFFECTIVE_DPI, &dpiX, &dpiY)) {
         return false;
     }
 
-    ddpiinfo->ddpi = ::sqrt(dpiX * dpiX + dpiY * dpiY);
-    ddpiinfo->hdpi = dpiX;
-    ddpiinfo->vdpi = dpiY;
+    ddpiinfo->ddpi = static_cast<f32>(::sqrt(dpiX * dpiX + dpiY * dpiY));
+    ddpiinfo->hdpi = static_cast<f32>(dpiX);
+    ddpiinfo->vdpi = static_cast<f32>(dpiY);
 
     return true;
 }

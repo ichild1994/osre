@@ -38,18 +38,18 @@ using namespace ::OSRE::RenderBackend;
 //-------------------------------------------------------------------------------------------------
 ///	@ingroup	RenderTest
 ///
-///	@brief  A geo-model - rendering test
+///	@brief  A scene-node-rendering test.
 //-------------------------------------------------------------------------------------------------
-class GeoModelMatrixRenderTest : public AbstractRenderTest {
+class SceneNodeRenderTest final : public AbstractRenderTest {
     TransformMatrixBlock m_transformMatrix;
 
 public:
-    GeoModelMatrixRenderTest() :
+    SceneNodeRenderTest() :
             AbstractRenderTest("rendertest/GeoModelMatrixRenderTest") {
         // empty
     }
 
-    ~GeoModelMatrixRenderTest() override {
+    ~SceneNodeRenderTest() override {
         // empty
     }
 
@@ -59,11 +59,6 @@ public:
         Scene::MeshBuilder myBuilder;
         Mesh *mesh1 = myBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly)
             .getMesh();
-        mesh1->m_localMatrix = true;
-        TransformState transform;
-        transform.setTranslation(0.5f, 0, 0);
-        transform.setScale(0.2f, 0.2f, 0.2f);
-        transform.toMatrix(mesh1->m_model);
 
         rbSrv->beginPass(PipelinePass::getPassNameById(RenderPassId));
         {
@@ -73,10 +68,6 @@ public:
 
                 myBuilder.allocTriangles(VertexType::ColorVertex, BufferAccessType::ReadOnly);
                 Mesh *mesh2 = myBuilder.getMesh();
-                mesh2->m_localMatrix = true;
-                transform.setTranslation(-0.5f, 0, 0);
-                transform.setScale(0.2f, 0.2f, 0.2f);
-                transform.toMatrix(mesh2->m_model);
                 rbSrv->addMesh(mesh2, 0);
             }
             rbSrv->endRenderBatch();
@@ -87,7 +78,7 @@ public:
     }
 };
 
-ATTACH_RENDERTEST(GeoModelMatrixRenderTest)
+ATTACH_RENDERTEST(SceneNodeRenderTest)
 
 } // namespace RenderTest
 } // namespace OSRE

@@ -91,7 +91,7 @@ String Settings::getString(ConfigKey key) const {
     return v.getString();
 }
 
-bool Settings::setInt(ConfigKey key, i32 intValue) {
+bool Settings::setInt(ConfigKey key, i64 intValue) {
     if (key >= MaxKonfigKey) {
         return false;
     }
@@ -103,7 +103,7 @@ bool Settings::setInt(ConfigKey key, i32 intValue) {
     return true;
 }
 
-i32 Settings::getInt(ConfigKey key) const {
+i64 Settings::getInt(ConfigKey key) const {
     const CPPCore::Variant &v = get(key);
     return v.getInt();
 }
@@ -160,7 +160,7 @@ void Settings::clear() {
     }
 }
 
-static i32 mapPlatformtype2Int(PluginType type) {
+static i64 mapPlatformtype2Int(PluginType type) {
 #ifdef OSRE_WINDOWS
     if (PluginType::WindowsPlugin == type) {
         return 0;
@@ -178,7 +178,7 @@ void Settings::initDefaults() {
     appName.setStdString("OSRE Application");
     m_propertyMap->setProperty(AppName, ConfigKeyStringTable[AppName], appName);
 
-    value.setInt(static_cast<i32>(GfxApp));
+    value.setInt(static_cast<i64>(GfxApp));
     m_propertyMap->setProperty(AppType, ConfigKeyStringTable[AppName], value);
 
     // Set version 0.1.0 as default
@@ -190,7 +190,7 @@ void Settings::initDefaults() {
     m_propertyMap->setProperty(AppVersionPatch, ConfigKeyStringTable[AppVersionPatch], value);
 
     windowsTitle.setStdString("The OSRE experience");
-    const i32 pluginType( mapPlatformtype2Int( Platform::PlatformInterface::getOSPluginType() ) );
+    const i64 pluginType( mapPlatformtype2Int( Platform::PlatformInterface::getOSPluginType() ) );
     value.setInt( pluginType );
     m_propertyMap->setProperty( WindowsTitle, ConfigKeyStringTable[ WindowsTitle ], windowsTitle );
     renderAPI.setStdString("opengl");

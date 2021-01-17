@@ -59,9 +59,9 @@ public:
     /// Writes into file.
     ui32 write(const void *pBuffer, ui32 size);
     /// Reads a single integer value.
-    ui32 readI32(i32 &value);
+    ui32 readI32(i64 &value);
     /// Writes a single integer value.
-    ui32 writeI32(i32 value);
+    ui32 writeI32(i64 value);
     /// Reads a single unsigned integer value.
     ui32 readUI32(ui32 &value);
     /// Writes a single unsigned integer value.

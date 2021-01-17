@@ -253,11 +253,11 @@ bool Widget::hasProperty(const String &name) const {
     return (getProperty(name) != nullptr);
 }
 
-void Widget::setStackIndex(i32 index) {
+void Widget::setStackIndex(i64 index) {
     m_stackIndex = index;
 }
 
-i32 Widget::getStackIndex() const {
+i64 Widget::getStackIndex() const {
     return m_stackIndex;
 }
 

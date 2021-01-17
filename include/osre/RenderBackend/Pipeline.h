@@ -104,7 +104,7 @@ public:
 private:
     using PipelinePassArray = TArray<PipelinePass *>;
     PipelinePassArray m_passes;
-    i32 m_currentPassId;
+    i64 m_currentPassId;
     bool m_inFrame;
 };
 

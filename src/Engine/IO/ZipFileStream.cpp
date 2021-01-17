@@ -73,8 +73,8 @@ ui32 ZipFileStream::read( void *buffer, ui32 size ) {
 			// you need to mark the last character with '\0', so add 
 			// another character
 			unzOpenCurrentFile( m_zipFile );
-			i32 bytesRead = unzReadCurrentFile( m_zipFile, buffer, fileInfo.uncompressed_size);
-			if ( bytesRead < 0 || bytesRead != (i32) fileInfo.uncompressed_size ) {
+			i64 bytesRead = unzReadCurrentFile( m_zipFile, buffer, fileInfo.uncompressed_size);
+			if ( bytesRead < 0 || bytesRead != (i64) fileInfo.uncompressed_size ) {
 				return filesize;
 			}
 

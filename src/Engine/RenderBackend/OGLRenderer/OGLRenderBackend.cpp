@@ -133,7 +133,7 @@ const glm::mat4 &OGLRenderBackend::getMatrix(MatrixType type) const {
         case MatrixType::Normal:
             return m_mvp.m_normal;
         default:
-            osre_debug(Tag, "Not supported enum " + osre_to_string((i32)type));
+            osre_debug(Tag, "Not supported enum " + osre_to_string((i64)type));
             break;
     }
     return m_mvp.m_model;
@@ -157,7 +157,7 @@ bool OGLRenderBackend::create(Platform::AbstractOGLRenderContext *renderCtx) {
 
     m_fpState = new RenderStates;
     enumerateGPUCaps();
-    ::memset(m_OpenGLVersion, 0, sizeof(i32) * 2);
+    ::memset(m_OpenGLVersion, 0, sizeof(i64) * 2);
 
     // checking the supported GL version
     const char *GLVendorString = (const char *)glGetString(GL_VENDOR);

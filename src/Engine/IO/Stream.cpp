@@ -85,11 +85,11 @@ ui32 Stream::write( const void *, ui32 ) {
 	return 0;
 }
 
-ui32 Stream::readI32( i32 & ) {
+ui32 Stream::readI32( i64 & ) {
     return 0;
 }
 
-ui32 Stream::writeI32( i32 ) {
+ui32 Stream::writeI32( i64 ) {
     return 0;
 }
 

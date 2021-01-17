@@ -105,14 +105,14 @@ using ui16 = unsigned short;
 ///	The data type signed short, 2 byte long.
 using i16 = signed short;
 
-///	The data type signed int, 4 byte long.
-using i32 = int;
-
 ///	The data type unsigned int, 4 byte long.
 using ui16 = unsigned short;
 
 ///	The data type signed int, 4 byte long.
-typedef unsigned int ui32;
+using i32 = int32_t;
+
+///	The data type signed int, 4 byte long.
+using ui32 = unsigned int;
 
 ///	The data type for signed and unsigned int 8 bytes long.
 // clang-format off
@@ -127,37 +127,41 @@ using i64 = int64_t;
 using ui64 = uint64_t ;
 
 #endif
+
+/// Used to describe a unique id in the engine context.
+using guid = ui64;
+
 // clang-format on
 
 /// The data type for hash ids.
-typedef unsigned long HashId;
+using HashId = unsigned long;
 
 ///	The data type float, 4 byte long.
-typedef float f32;
+using f32 = float;
 
 ///	The data type double, 8 byte long.
-typedef double d32;
+using d32 = double;
 
 ///	The data type Object id.
-typedef int ObjectId;
+using ObjectId = int;
 
 ///	The data type for strings
-typedef std::string String;
+using String = std::string;
 
 /// A handle struct.
 struct Handle {
-    i32 m_idx;
+    i64 m_idx;
 
     Handle() :
             m_idx(-1) {
         // empty
     }
 
-    explicit Handle(i32 idx) {
+    explicit Handle(i64 idx) {
         init(idx);
     }
 
-    void init(i32 idx) {
+    void init(i64 idx) {
         m_idx = idx;
     }
 
@@ -178,7 +182,7 @@ struct Time {
     Time();
     Time(i64 microseconds);
     f32 asSeconds() const;
-    i32 asMilliSeconds() const;
+    i64 asMilliSeconds() const;
     i64 asMicroSeconds() const;
 };
 
@@ -196,8 +200,8 @@ inline f32 Time::asSeconds() const {
     return m_microseconds / 1000000.f;
 }
 
-inline i32 Time::asMilliSeconds() const {
-    return static_cast<i32>(m_microseconds / 1000);
+inline i64 Time::asMilliSeconds() const {
+    return static_cast<i64>(m_microseconds / 1000);
 }
 
 inline i64 Time::asMicroSeconds() const {
@@ -328,7 +332,7 @@ inline TVec2<T> operator*(T scalar, TVec2<T> vec) {
     return res;
 }
 
-using Vec2i = TVec2<i32>;
+using Vec2i = TVec2<i64>;
 using Vec2f = TVec2<f32>;
 
 template <class T>
@@ -462,7 +466,7 @@ inline TVec3<T> operator*(T scalar, TVec3<T> vec) {
     return res;
 }
 
-using Vec3i = TVec3<i32>;
+using Vec3i = TVec3<i64>;
 using Vec3f = TVec3<f32>;
 
 template <class T>
@@ -544,7 +548,7 @@ struct TVec4 {
     }
 };
 
-using Vec4i = TVec4<i32>;
+using Vec4i = TVec4<i64>;
 using Vec4f = TVec4<f32>;
 
 template <class T>
@@ -596,7 +600,7 @@ struct TPoint2 {
     }
 };
 
-using Point2i = TPoint2<i32>;
+using Point2i = TPoint2<i64>;
 using Point2ui = TPoint2<ui32>;
 
 /// @brief  Helper class t represent a 2D rectangle.
@@ -722,7 +726,7 @@ struct TRectangle {
 };
 
 using Rect2ui = TRectangle<ui32>;
-using Rect2i = TRectangle<i32>;
+using Rect2i = TRectangle<i64>;
 
 struct float4 {
     union {

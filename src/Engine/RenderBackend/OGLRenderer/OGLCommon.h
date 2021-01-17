@@ -199,15 +199,11 @@ struct DrawPanelsCmdData {
 
 ///	@brief
 struct DrawPrimitivesCmdData {
-    bool m_localMatrix;
-    glm::mat4 m_model;
     OGLVertexArray *m_vertexArray;
     CPPCore::TArray<size_t> m_primitives;
     const char *m_id;
 
     DrawPrimitivesCmdData() :
-            m_localMatrix(false),
-            m_model(),
             m_vertexArray(nullptr),
             m_primitives(),
             m_id(nullptr) {

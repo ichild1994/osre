@@ -30,7 +30,7 @@ namespace Scene {
 
 using namespace ::OSRE::RenderBackend;
 
-static const i32 NeedsUpdate = 1;
+static const i64 NeedsUpdate = 1;
 
 MeshProcessor::MeshProcessor() :
         AbstractProcessor(),

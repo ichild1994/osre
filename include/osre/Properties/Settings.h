@@ -89,8 +89,8 @@ public:
     ///	@return	true, of set was successful, false if not.
     bool setString( ConfigKey key, const String &rValue );
     String getString( ConfigKey key ) const;
-    bool setInt( ConfigKey key, i32 value );
-    i32 getInt( ConfigKey key ) const;
+    bool setInt( ConfigKey key, i64 value );
+    i64 getInt( ConfigKey key ) const;
     bool setBool( ConfigKey key, bool value );
     bool getBool( ConfigKey key ) const;
     bool setFloat( ConfigKey key, f32 value );

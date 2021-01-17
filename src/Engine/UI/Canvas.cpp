@@ -87,7 +87,7 @@ void Canvas::onRender(UiRenderCmdCache &renderCmdCache, RenderBackendService *rb
 
     // push 2D render mode
     const Rect2ui &r = Widget::getRect();
-    m_transformMatrix.m_projection = glm::ortho((i32)r.getX1(), (i32)r.getWidth(), (i32)r.getHeight(), (i32)r.getY1());
+    m_transformMatrix.m_projection = glm::ortho((i64)r.getX1(), (i64)r.getWidth(), (i64)r.getHeight(), (i64)r.getY1());
     m_transformMatrix.m_view = glm::mat4(1);
     m_transformMatrix.m_model = glm::rotate(m_transformMatrix.m_model, 0.01f, glm::vec3(1, 1, 0));
     m_transformMatrix.update();

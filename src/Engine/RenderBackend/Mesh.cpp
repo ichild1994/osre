@@ -37,8 +37,6 @@ static Ids s_Ids;
 static const c8 *Tag = "Mesh";
 
 Mesh::Mesh() :
-        m_localMatrix(false),
-        m_model(1.0f),
         m_material(nullptr),
         m_vertextype(VertexType::RenderVertex),
         m_vb(nullptr),
@@ -67,16 +65,16 @@ Mesh::~Mesh() {
     s_Ids.releaseId(m_id);
 }
 
-Mesh *Mesh::create(size_t numGeo) {
-    if (0 == numGeo) {
+Mesh *Mesh::create(size_t numMeshes) {
+    if (0 == numMeshes) {
         osre_debug(Tag, "Number of static geo to create is zero.");
         return nullptr;
     }
-    Mesh *geoArray(new Mesh[numGeo]);
-    for (ui32 i = 0; i < numGeo; i++) {
-        geoArray[i].m_id = s_Ids.getUniqueId();
+    auto *meshArray = new Mesh[numMeshes];
+    for (ui32 i = 0; i < numMeshes; i++) {
+        meshArray[i].m_id = s_Ids.getUniqueId();
     }
-    return geoArray;
+    return meshArray;
 }
 
 void Mesh::destroy(Mesh **meshes) {

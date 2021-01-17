@@ -57,7 +57,7 @@ private:
 private:
     GeoArray m_geoArray;
     Node::AABB m_aabb;
-    i32 m_dirty;
+    i64 m_dirty;
 };
 
 } // Namespace Scene

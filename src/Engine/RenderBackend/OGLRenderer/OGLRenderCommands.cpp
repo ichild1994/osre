@@ -180,7 +180,7 @@ OGLVertexArray *setupBuffers(Mesh *mesh, OGLRenderBackend *rb, OGLShader *oglSha
     // enable vertex attribute arrays
     TArray<OGLVertexAttribute *> attributes;
     rb->createVertexCompArray(mesh->m_vertextype, oglShader, attributes);
-    const ui32 stride = Mesh::getVertexSize(mesh->m_vertextype);
+    const size_t stride = Mesh::getVertexSize(mesh->m_vertextype);
     rb->bindVertexLayout(vertexArray, oglShader, stride, attributes);
     rb->releaseVertexCompArray(attributes);
 
@@ -195,8 +195,7 @@ OGLVertexArray *setupBuffers(Mesh *mesh, OGLRenderBackend *rb, OGLShader *oglSha
     return vertexArray;
 }
 
-void setupPrimDrawCmd(const char *id, bool useLocalMatrix, const glm::mat4 &model,
-        const TArray<size_t> &primGroups, OGLRenderBackend *rb,
+void setupPrimDrawCmd(const char *id, const TArray<size_t> &primGroups, OGLRenderBackend *rb,
         OGLRenderEventHandler *eh, OGLVertexArray *va) {
     OSRE_ASSERT(nullptr != rb);
     OSRE_ASSERT(nullptr != eh);
@@ -207,10 +206,6 @@ void setupPrimDrawCmd(const char *id, bool useLocalMatrix, const glm::mat4 &mode
 
     OGLRenderCmd *renderCmd = new OGLRenderCmd(OGLRenderCmdType::DrawPrimitivesCmd);
     DrawPrimitivesCmdData *data = new DrawPrimitivesCmdData;
-    if (useLocalMatrix) {
-        data->m_model = model;
-        data->m_localMatrix = useLocalMatrix;
-    }
     data->m_id = id;
     data->m_vertexArray = va;
     data->m_primitives.reserve(primGroups.size());
